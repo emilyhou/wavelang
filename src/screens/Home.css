@@ -1,0 +1,19 @@
+.home {
+  padding-top: 24px;
+}
+
+.code-input {
+  text-transform: uppercase;
+  letter-spacing: 0.35em;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.room-code {
+  font-size: 40px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  /* The letter-spacing pushes the text right; nudge it back to true center. */
+  text-indent: 0.2em;
+}

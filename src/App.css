@@ -1,0 +1,64 @@
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: var(--tap);
+}
+
+.topbar-exit {
+  min-height: 36px;
+  padding: 0 12px;
+  font-size: 14px;
+  color: var(--muted);
+  border-color: transparent;
+}
+
+.topbar-actor {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 0 auto;
+  font-size: 13px;
+}
+
+.topbar-actor span {
+  white-space: nowrap;
+}
+
+.topbar-actor select {
+  min-height: 36px;
+  width: auto;
+  max-width: 150px;
+  padding: 0 8px;
+  font-size: 14px;
+}
+
+.topbar-status {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-variant: small-caps;
+  letter-spacing: 0.08em;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--muted);
+}
+
+.status-dot.online {
+  background: var(--right);
+}
+
+.status-dot.connecting {
+  background: var(--left);
+}
+
+.status-dot.error,
+.status-dot.offline {
+  background: var(--danger);
+}

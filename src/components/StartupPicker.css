@@ -1,0 +1,85 @@
+.picker {
+  position: relative;
+}
+
+.picker-list {
+  list-style: none;
+  margin: 0;
+  padding: 4px;
+  /* Absolute so the dropdown doesn't shove the rest of the round UI down when
+     the on-screen keyboard is already eating half the viewport. */
+  position: absolute;
+  z-index: 20;
+  left: 0;
+  right: 0;
+  /* max-height is set inline from the measured space around the input. */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 12px 32px rgb(0 0 0 / 0.45);
+}
+
+.picker-list.drop-down {
+  top: calc(100% + 6px);
+}
+
+.picker-list.drop-up {
+  bottom: calc(100% + 6px);
+}
+
+.picker-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: var(--tap);
+  padding: 0 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  text-align: left;
+}
+
+.picker-option.active {
+  background: var(--surface-2);
+}
+
+.picker-option-name {
+  font-size: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.picker-empty {
+  margin-top: 8px;
+}
+
+.picker-chosen {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: var(--tap);
+  padding: 6px 6px 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+}
+
+.picker-chosen-name {
+  font-size: 17px;
+  font-weight: 600;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.picker-clear {
+  min-height: 34px;
+  padding: 0 12px;
+  font-size: 13px;
+  color: var(--muted);
+}

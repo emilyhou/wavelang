@@ -1,0 +1,46 @@
+.round-meta {
+  text-align: center;
+  line-height: 1.45;
+}
+
+.clue-banner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.clue-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.clue-value {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-align: center;
+}
+
+.counter-row button {
+  min-height: 56px;
+  font-size: 16px;
+}
+
+.reveal-points {
+  font-size: 22px;
+  font-variant-numeric: tabular-nums;
+}
+
+.reveal-score {
+  gap: 8px;
+}

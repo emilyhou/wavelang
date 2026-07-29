@@ -1,0 +1,75 @@
+.dial {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.dial-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  /* Without this the browser scrolls the page instead of moving the needle. */
+  touch-action: none;
+}
+
+.dial-svg.interactive {
+  cursor: grab;
+}
+
+.dial-svg.interactive:active {
+  cursor: grabbing;
+}
+
+.dial-track {
+  fill: var(--surface-2);
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.dial-tick {
+  stroke: var(--border);
+  stroke-width: 2;
+}
+
+.dial-needle {
+  stroke: var(--text);
+  stroke-width: 4;
+  stroke-linecap: round;
+  transition: all 0.12s ease-out;
+}
+
+.dial-needle.ghost {
+  stroke: var(--muted);
+  stroke-width: 3;
+  stroke-dasharray: 6 5;
+  opacity: 0.75;
+}
+
+.dial-hub {
+  fill: var(--text);
+}
+
+.dial-labels {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.dial-label {
+  max-width: 45%;
+  line-height: 1.25;
+}
+
+.dial-label.left {
+  text-align: left;
+  color: var(--left);
+}
+
+.dial-label.right {
+  text-align: right;
+  color: var(--right);
+}
