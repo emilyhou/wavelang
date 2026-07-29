@@ -2,7 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- Vite fingerprints /assets, but files in public/ keep their exact name.
+         Browsers cache favicons in a store that largely ignores cache-control,
+         so a redesigned icon can stay stale for days. Bump ?v= whenever
+         favicon.svg changes; that's the only reliable way to force a refetch. -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
     <!-- maximum-scale + viewport-fit: iOS Safari otherwise zooms on input focus
          and ignores the notch inset, both of which wreck the dial layout. -->
     <meta
