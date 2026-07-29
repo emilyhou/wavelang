@@ -1,0 +1,103 @@
+.clue-input {
+  position: relative;
+}
+
+/* The logo and clear button sit inside the field, so the whole thing reads as
+   one control rather than an input with decorations bolted on. */
+.clue-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-left: 12px;
+  padding-right: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.clue-field:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.clue-field input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+/* The wrapper already draws the focus ring. */
+.clue-field input:focus {
+  outline: none;
+}
+
+.clue-clear {
+  min-height: 34px;
+  min-width: 34px;
+  padding: 0;
+  border-color: transparent;
+  font-size: 20px;
+  line-height: 1;
+  color: var(--muted);
+}
+
+.clue-suggestions {
+  list-style: none;
+  margin: 0;
+  padding: 4px;
+  /* Absolute so the list doesn't shove the rest of the round UI down when the
+     on-screen keyboard is already eating half the viewport. */
+  position: absolute;
+  z-index: 20;
+  left: 0;
+  right: 0;
+  /* max-height is set inline from the measured space around the input. */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+}
+
+.clue-suggestions.drop-down {
+  top: calc(100% + 6px);
+}
+
+.clue-suggestions.drop-up {
+  bottom: calc(100% + 6px);
+}
+
+.clue-suggestion {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: var(--tap);
+  padding: 0 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  text-align: left;
+}
+
+.clue-suggestion.active {
+  background: var(--surface-2);
+}
+
+.clue-suggestion-name {
+  font-size: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.clue-hint {
+  min-height: 20px;
+}

@@ -223,6 +223,19 @@ describe('round flow', () => {
     expect(state.scores.right).toBe(1)
   })
 
+  it('carries a freeform clue through to the reveal', () => {
+    // The startup list is a convenience, not a constraint — the psychic can
+    // name anything, and nothing downstream may assume it's a known company.
+    let state = startGame(fourPlayerRoom(), CARDS, alwaysZero)
+    state = { ...state, target: 50, phase: 'givingClue' }
+    state = submitClue(state, 'my cousin Greg')
+    state = { ...state, guess: 50 }
+    state = submitCounterGuess(submitGuess(state), 'left')
+
+    expect(state.lastResult?.clue).toBe('my cousin Greg')
+    expect(state.scores.left).toBe(4)
+  })
+
   it('skips the counter-guess in coop and pools the score', () => {
     let state = fourPlayerRoom('coop')
     state = startGame(state, CARDS, alwaysZero)

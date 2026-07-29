@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Dial } from '../components/Dial'
 import { Scoreboard } from '../components/Scoreboard'
 import { StartupLogo } from '../components/StartupLogo'
-import { StartupPicker } from '../components/StartupPicker'
+import { ClueInput } from '../components/ClueInput'
 import { CARD_IDS, getCard } from '../data/cards'
 import { getStartup } from '../data/startups'
 import type { GameController } from '../game/controller'
@@ -16,7 +16,7 @@ import {
   submitCounterGuess,
   submitGuess,
 } from '../game/engine'
-import { TEAM_NAMES, type CounterGuess, type RoomState, type Startup } from '../game/types'
+import { TEAM_NAMES, type CounterGuess, type RoomState } from '../game/types'
 import './Round.css'
 
 const rng = () => Math.random()
@@ -135,7 +135,12 @@ function GivingClue({
   isPsychic: boolean
 }) {
   const card = getCard(state.cardId)!
-  const [clue, setClue] = useState<Startup | null>(null)
+  const [clue, setClue] = useState('')
+
+  const trimmed = clue.trim()
+  const give = () => {
+    if (trimmed) update((s) => submitClue(s, trimmed))
+  }
 
   if (!isPsychic) {
     return (
@@ -161,13 +166,13 @@ function GivingClue({
       <p className="muted">
         Only you can see the target. Name the AI startup that lands right there on this spectrum.
       </p>
-      <StartupPicker value={clue} onChange={setClue} autoFocus />
-      <button
-        type="button"
-        className="primary wide"
-        disabled={!clue}
-        onClick={() => clue && update((s) => submitClue(s, clue.name))}
-      >
+      <ClueInput value={clue} onChange={setClue} onSubmit={give} autoFocus />
+      <p className="muted clue-hint">
+        {trimmed && !getStartup(trimmed)
+          ? `“${trimmed}” isn't on our list — you can still give it.`
+          : 'Not on the list? Type anything and give it anyway.'}
+      </p>
+      <button type="button" className="primary wide" disabled={!trimmed} onClick={give}>
         Give this clue
       </button>
     </div>

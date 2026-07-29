@@ -7,6 +7,9 @@ psychic — can see it. They name an AI company that lands right there, their te
 guess, and the other team bets on which side the real target is. Closer is worth more: 4 points dead
 on, then 3, then 2.
 
+The clue box autocompletes over ~360 AI companies, but it doesn't police you — the list will never
+cover everything worth naming, so any text can be given as a clue.
+
 Mobile-first, one phone per player, no accounts.
 
 ## Quick start
@@ -76,6 +79,7 @@ src/game/useHotseatRoom   Local state.
 src/game/useRoom.ts       Supabase-backed state.
 src/data/cards.ts         ~30 spectrum cards.
 src/data/startups.ts      ~360 AI companies + the autocomplete search.
+src/components/ClueInput  Free-text clue field with those as suggestions.
 src/components/Dial.tsx   The SVG gauge.
 ```
 
