@@ -75,7 +75,7 @@ src/game/controller.ts    The seam: one interface, two implementations.
 src/game/useHotseatRoom   Local state.
 src/game/useRoom.ts       Supabase-backed state.
 src/data/cards.ts         ~30 spectrum cards.
-src/data/startups.ts      ~150 AI companies + the autocomplete search.
+src/data/startups.ts      ~360 AI companies + the autocomplete search.
 src/components/Dial.tsx   The SVG gauge.
 ```
 
@@ -110,7 +110,7 @@ npm run build
 
 ## Where to take it next
 
-- Grow `startups.ts` from ~150 toward 500.
+- Grow `startups.ts` from ~360 toward 500.
 - Write more spectrum cards — the format is two poles of a single arguable axis.
 - More visual character. The current look is a plain warm-paper theme; every color is a CSS
   variable in `src/index.css`, so re-theming is a one-file job.

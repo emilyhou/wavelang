@@ -71,6 +71,44 @@ describe('searchStartups', () => {
   it('returns nothing for gibberish', () => {
     expect(searchStartups('zzzzqqq')).toEqual([])
   })
+
+  /*
+   * Ranking matters more than matching once the list is large. A plain
+   * substring search buries Ramp under Aurora and Anyscale, which merely
+   * contain the letters "ra" somewhere in the middle.
+   */
+  it('ranks word-start matches above mid-word ones', () => {
+    const names = searchStartups('ra', 8).map((s) => s.name)
+    const wordStart = (n: string) => /(^|\s)ra/i.test(n)
+
+    expect(names).toContain('Ramp')
+    expect(names).toContain('Rabbit')
+    // No mid-word match may appear before a word-start one.
+    const firstMidWord = names.findIndex((n) => !wordStart(n))
+    if (firstMidWord !== -1) {
+      expect(names.slice(firstMidWord).every((n) => !wordStart(n))).toBe(true)
+    }
+  })
+
+  it('matches a later word in a multi-word name', () => {
+    expect(searchStartups('labs', 8).map((s) => s.name)).toContain('Black Forest Labs')
+    expect(searchStartups('dynamics', 8).map((s) => s.name)).toContain('Boston Dynamics')
+  })
+
+  it('splits camelCase names into searchable words', () => {
+    expect(searchStartups('labs', 12).map((s) => s.name)).toContain('ElevenLabs')
+  })
+
+  it('surfaces several companies for a shared prefix, like real autocomplete', () => {
+    const per = searchStartups('per', 8).map((s) => s.name)
+    expect(per[0]).toBe('Perplexity')
+    expect(per).toContain('Persona')
+  })
+
+  it('still finds mid-word matches when nothing better exists', () => {
+    // "phic" appears only inside Isomorphic Labs.
+    expect(searchStartups('morphic', 8).map((s) => s.name)).toContain('Isomorphic Labs')
+  })
 })
 
 describe('getStartup', () => {

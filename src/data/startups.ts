@@ -3,13 +3,17 @@ import type { Startup } from '../game/types'
 /**
  * The clue vocabulary: AI companies everyone in the room is likely to recognise.
  *
- * This is the ~120-name starter list; the plan is to grow it toward 500. Rules
- * of thumb for adding: it has to be nameable at a party without explanation,
- * and it has to be *placeable* on a spectrum — a company nobody has an opinion
- * about makes a terrible clue.
+ * ~360 names, heading toward 500. Rules of thumb for adding: it has to be
+ * nameable at a party without explanation, and it has to be *placeable* on a
+ * spectrum — a company nobody has an opinion about makes a terrible clue.
  *
  * `domain` drives the logo lookup (see StartupLogo). `aliases` catch the other
  * things people type: old names, nicknames, the product instead of the company.
+ *
+ * Every domain here resolves in DNS — that's checked by hand when adding, since
+ * a dead domain silently degrades to the letter-tile fallback. Two entries have
+ * already needed it: Humane moved to humane.ai after the HP acquisition, and
+ * Play.ht became PlayAI.
  */
 export const STARTUPS: Startup[] = [
   // Frontier labs
@@ -191,47 +195,333 @@ export const STARTUPS: Startup[] = [
   { name: 'Vanta', domain: 'vanta.com' },
 
   // Consumer AI, for better or worse
-  { name: 'Humane', domain: 'humane.com', aliases: ['Ai Pin'] },
+  { name: 'Humane', domain: 'humane.ai', aliases: ['Ai Pin'] },
   { name: 'Rabbit', domain: 'rabbit.tech', aliases: ['R1'] },
   { name: 'Friend', domain: 'friend.com' },
   { name: 'Cluely', domain: 'cluely.com' },
   { name: 'Sesame', domain: 'sesame.com', aliases: ['Maya'] },
   { name: 'Tolan', domain: 'portola.com', aliases: ['Portola'] },
+
+  // More labs & model providers
+  { name: 'Liquid AI', domain: 'liquid.ai', aliases: ['LFM'] },
+  { name: 'Contextual AI', domain: 'contextual.ai' },
+  { name: 'Arcee AI', domain: 'arcee.ai' },
+  { name: 'Nomic AI', domain: 'nomic.ai', aliases: ['GPT4All'] },
+  { name: 'Jina AI', domain: 'jina.ai' },
+  { name: 'Voyage AI', domain: 'voyageai.com' },
+  { name: 'Allen Institute for AI', domain: 'allenai.org', aliases: ['AI2', 'OLMo'] },
+  { name: 'Hume AI', domain: 'hume.ai' },
+  { name: 'Luma Labs', domain: 'lumalabs.ai', aliases: ['Ray'] },
+
+  // Inference, GPUs, serving
+  { name: 'RunPod', domain: 'runpod.io' },
+  { name: 'Vast.ai', domain: 'vast.ai' },
+  { name: 'Crusoe', domain: 'crusoe.ai' },
+  { name: 'Nebius', domain: 'nebius.com' },
+  { name: 'SF Compute', domain: 'sfcompute.com' },
+  { name: 'Predibase', domain: 'predibase.com' },
+  { name: 'OctoAI', domain: 'octo.ai' },
+  { name: 'Lamini', domain: 'lamini.ai' },
+  { name: 'Unsloth', domain: 'unsloth.ai' },
+  { name: 'Tenstorrent', domain: 'tenstorrent.com' },
+  { name: 'Rain AI', domain: 'rain.ai' },
+  { name: 'Lightmatter', domain: 'lightmatter.co' },
+  { name: 'Celestial AI', domain: 'celestial.ai' },
+  { name: 'd-Matrix', domain: 'd-matrix.ai' },
+  { name: 'Hailo', domain: 'hailo.ai' },
+  { name: 'Axelera AI', domain: 'axelera.ai' },
+  { name: 'FuriosaAI', domain: 'furiosa.ai' },
+  { name: 'SiMa.ai', domain: 'sima.ai' },
+  { name: 'Extropic', domain: 'extropic.ai' },
+  { name: 'Normal Computing', domain: 'normalcomputing.ai' },
+  { name: 'PsiQuantum', domain: 'psiquantum.com' },
+
+  // Agent infrastructure & tooling
+  { name: 'CrewAI', domain: 'crewai.com' },
+  { name: 'Mastra', domain: 'mastra.ai' },
+  { name: 'deepset', domain: 'deepset.ai', aliases: ['Haystack'] },
+  { name: 'Composio', domain: 'composio.dev' },
+  { name: 'Arcade', domain: 'arcade.dev' },
+  { name: 'E2B', domain: 'e2b.dev' },
+  { name: 'Daytona', domain: 'daytona.io' },
+  { name: 'Browserbase', domain: 'browserbase.com' },
+  { name: 'Browser Use', domain: 'browser-use.com' },
+  { name: 'Firecrawl', domain: 'firecrawl.dev' },
+  { name: 'Apify', domain: 'apify.com' },
+  { name: 'Exa', domain: 'exa.ai', aliases: ['Metaphor'] },
+  { name: 'Tavily', domain: 'tavily.com' },
+  { name: 'Bright Data', domain: 'brightdata.com' },
+  { name: 'MultiOn', domain: 'multion.ai' },
+  { name: 'Lindy', domain: 'lindy.ai' },
+  { name: 'Dust', domain: 'dust.tt' },
+  { name: 'Relevance AI', domain: 'relevanceai.com' },
+  { name: 'Zapier', domain: 'zapier.com' },
+  { name: 'Make', domain: 'make.com', aliases: ['Integromat'] },
+  { name: 'n8n', domain: 'n8n.io' },
+
+  // Evals, observability, guardrails
+  { name: 'Galileo', domain: 'galileo.ai' },
+  { name: 'Patronus AI', domain: 'patronus.ai' },
+  { name: 'Comet ML', domain: 'comet.com', aliases: ['Opik'] },
+  { name: 'Neptune.ai', domain: 'neptune.ai' },
+  { name: 'Lakera', domain: 'lakera.ai' },
+  { name: 'HiddenLayer', domain: 'hiddenlayer.com' },
+  { name: 'Protect AI', domain: 'protectai.com' },
+  { name: 'Robust Intelligence', domain: 'robustintelligence.com' },
+
+  // Vectors, databases, data stack
+  { name: 'Qdrant', domain: 'qdrant.tech' },
+  { name: 'Zilliz', domain: 'zilliz.com', aliases: ['Milvus'] },
+  { name: 'Vespa', domain: 'vespa.ai' },
+  { name: 'Turbopuffer', domain: 'turbopuffer.com' },
+  { name: 'Neon', domain: 'neon.tech' },
+  { name: 'PlanetScale', domain: 'planetscale.com' },
+  { name: 'ClickHouse', domain: 'clickhouse.com' },
+  { name: 'MotherDuck', domain: 'motherduck.com', aliases: ['DuckDB'] },
+  { name: 'Tinybird', domain: 'tinybird.co' },
+  { name: 'dbt Labs', domain: 'getdbt.com', aliases: ['dbt'] },
+  { name: 'Fivetran', domain: 'fivetran.com' },
+  { name: 'Airbyte', domain: 'airbyte.com' },
+  { name: 'Dagster', domain: 'dagster.io' },
+  { name: 'Astronomer', domain: 'astronomer.io', aliases: ['Airflow'] },
+  { name: 'Confluent', domain: 'confluent.io', aliases: ['Kafka'] },
+  { name: 'Hightouch', domain: 'hightouch.com' },
+  { name: 'Sigma Computing', domain: 'sigmacomputing.com' },
+  { name: 'Monte Carlo', domain: 'montecarlodata.com' },
+  { name: 'Atlan', domain: 'atlan.com' },
+  { name: 'Redis', domain: 'redis.io' },
+  { name: 'MongoDB', domain: 'mongodb.com' },
+
+  // Coding, more
+  { name: 'Continue', domain: 'continue.dev' },
+  { name: 'Aider', domain: 'aider.chat' },
+  { name: 'Cline', domain: 'cline.bot' },
+  { name: 'Zed', domain: 'zed.dev' },
+  { name: 'Qodo', domain: 'qodo.ai', aliases: ['CodiumAI'] },
+  { name: 'CodeRabbit', domain: 'coderabbit.ai' },
+  { name: 'Greptile', domain: 'greptile.com' },
+  { name: 'Graphite', domain: 'graphite.dev' },
+  { name: 'Codegen', domain: 'codegen.com' },
+  { name: 'Factory', domain: 'factory.ai', aliases: ['Droids'] },
+  { name: 'Tessl', domain: 'tessl.io' },
+  { name: 'Base44', domain: 'base44.com' },
+  { name: 'Bubble', domain: 'bubble.io' },
+  { name: 'Webflow', domain: 'webflow.com' },
+  { name: 'Framer', domain: 'framer.com' },
+  { name: 'Pydantic', domain: 'pydantic.dev' },
+
+  // Writing & marketing
+  { name: 'Jasper', domain: 'jasper.ai' },
+  { name: 'Writer', domain: 'writer.com' },
+  { name: 'Copy.ai', domain: 'copy.ai' },
+  { name: 'Typeface', domain: 'typeface.ai' },
+  { name: 'Sudowrite', domain: 'sudowrite.com' },
+  { name: 'Tome', domain: 'tome.app' },
+  { name: 'Coda', domain: 'coda.io' },
+  { name: 'Mem', domain: 'mem.ai' },
+  { name: 'Guru', domain: 'getguru.com' },
+
+  // Creative tools
+  { name: 'Canva', domain: 'canva.com' },
+  { name: 'Krea', domain: 'krea.ai' },
+  { name: 'Recraft', domain: 'recraft.ai' },
+  { name: 'Playground AI', domain: 'playground.com' },
+  { name: 'Freepik', domain: 'freepik.com' },
+  { name: 'Magnific', domain: 'magnific.ai' },
+  { name: 'Topaz Labs', domain: 'topazlabs.com' },
+  { name: 'Vizcom', domain: 'vizcom.ai' },
+  { name: 'Spline', domain: 'spline.design' },
+  { name: 'Genmo', domain: 'genmo.ai', aliases: ['Mochi'] },
+  { name: 'Haiper', domain: 'haiper.ai' },
+  { name: 'Moonvalley', domain: 'moonvalley.com' },
+  { name: 'Higgsfield', domain: 'higgsfield.ai' },
+  { name: 'Opus Clip', domain: 'opus.pro' },
+
+  // Speech & audio, more
+  { name: 'Speechmatics', domain: 'speechmatics.com' },
+  { name: 'Gladia', domain: 'gladia.io' },
+  { name: 'Rime', domain: 'rime.ai' },
+  { name: 'Resemble AI', domain: 'resemble.ai' },
+  { name: 'PlayAI', domain: 'playht.com', aliases: ['Play.ht'] },
+  { name: 'WellSaid Labs', domain: 'wellsaidlabs.com' },
+  { name: 'Murf AI', domain: 'murf.ai' },
+  { name: 'Speechify', domain: 'speechify.com' },
+  { name: 'Krisp', domain: 'krisp.ai' },
+  { name: 'Rev', domain: 'rev.com' },
+
+  // Meetings & knowledge work
+  { name: 'Read AI', domain: 'read.ai' },
+  { name: 'Circleback', domain: 'circleback.ai' },
+  { name: 'Fathom', domain: 'fathom.video' },
+  { name: 'Hebbia', domain: 'hebbia.com' },
+  { name: 'Rogo', domain: 'rogodata.com' },
+  { name: 'AlphaSense', domain: 'alpha-sense.com' },
+  { name: 'Consensus', domain: 'consensus.app' },
+
+  // Support & go-to-market
+  { name: 'Lorikeet', domain: 'lorikeetcx.ai' },
+  { name: 'Pylon', domain: 'usepylon.com' },
+  { name: 'Maven AGI', domain: 'mavenagi.com' },
+  { name: 'Forethought', domain: 'forethought.ai' },
+  { name: 'Ada', domain: 'ada.cx' },
+  { name: 'Apollo.io', domain: 'apollo.io' },
+  { name: 'Outreach', domain: 'outreach.io' },
+  { name: 'Gong', domain: 'gong.io' },
+  { name: 'Attention', domain: 'attention.com' },
+  { name: 'Nooks', domain: 'nooks.ai' },
+  { name: 'Unify', domain: 'unifygtm.com' },
+
+  // Fintech & back office
+  { name: 'Persona', domain: 'withpersona.com' },
+  { name: 'Alloy', domain: 'alloy.com' },
+  { name: 'Pilot', domain: 'pilot.com' },
+  { name: 'Digits', domain: 'digits.com' },
+  { name: 'Sardine', domain: 'sardine.ai' },
+  { name: 'Drata', domain: 'drata.com' },
+  { name: 'Delve', domain: 'delve.co' },
+
+  // Legal
+  { name: 'Spellbook', domain: 'spellbook.legal' },
+  { name: 'Luminance', domain: 'luminance.com' },
+  { name: 'Robin AI', domain: 'robinai.com' },
+  { name: 'Ironclad', domain: 'ironcladapp.com' },
+  { name: 'Clio', domain: 'clio.com' },
+  { name: 'Eve', domain: 'eve.legal' },
+
+  // Healthcare, more
+  { name: 'Suki', domain: 'suki.ai' },
+  { name: 'Corti', domain: 'corti.ai' },
+  { name: 'DeepScribe', domain: 'deepscribe.ai' },
+  { name: 'Freed', domain: 'getfreed.ai' },
+  { name: 'Heidi Health', domain: 'heidihealth.com' },
+  { name: 'Commure', domain: 'commure.com' },
+  { name: 'Tennr', domain: 'tennr.com' },
+  { name: 'Anterior', domain: 'anterior.com' },
+  { name: 'Cohere Health', domain: 'coherehealth.com' },
+
+  // Bio & science, more
+  { name: 'Xaira Therapeutics', domain: 'xaira.com' },
+  { name: 'Generate Biomedicines', domain: 'generatebiomedicines.com' },
+  { name: 'Profluent', domain: 'profluent.bio' },
+  { name: 'Arc Institute', domain: 'arcinstitute.org' },
+
+  // Security
+  { name: 'Wiz', domain: 'wiz.io' },
+  { name: 'Snyk', domain: 'snyk.io' },
+  { name: 'Abnormal Security', domain: 'abnormal.ai' },
+  { name: 'Chainguard', domain: 'chainguard.dev' },
+  { name: 'Semgrep', domain: 'semgrep.dev' },
+  { name: 'Socket', domain: 'socket.dev' },
+  { name: 'Dropzone AI', domain: 'dropzone.ai' },
+
+  // Robotics, more
+  { name: 'Apptronik', domain: 'apptronik.com' },
+  { name: 'Agility Robotics', domain: 'agilityrobotics.com', aliases: ['Digit'] },
+  { name: 'Sanctuary AI', domain: 'sanctuary.ai' },
+  { name: 'Unitree', domain: 'unitree.com' },
+  { name: 'Boston Dynamics', domain: 'bostondynamics.com', aliases: ['Spot', 'Atlas'] },
+  { name: 'Dexterity', domain: 'dexterity.ai' },
+
+  // Autonomy & defense, more
+  { name: 'Shield AI', domain: 'shield.ai' },
+  { name: 'Saronic', domain: 'saronic.com' },
+  { name: 'Hadrian', domain: 'hadrian.co' },
+  { name: 'Helsing', domain: 'helsing.ai' },
+  { name: 'Skydio', domain: 'skydio.com' },
+  { name: 'Zipline', domain: 'flyzipline.com' },
+  { name: 'Aurora', domain: 'aurora.tech' },
+  { name: 'Kodiak Robotics', domain: 'kodiak.ai' },
+  { name: 'Gatik', domain: 'gatik.ai' },
+  { name: 'Motional', domain: 'motional.com' },
+  { name: 'Pony.ai', domain: 'pony.ai' },
+  { name: 'WeRide', domain: 'weride.ai' },
+
+  // Consumer & education
+  { name: 'Replika', domain: 'replika.com' },
+  { name: 'Duolingo', domain: 'duolingo.com' },
+  { name: 'Speak', domain: 'speak.com' },
+  { name: 'Khan Academy', domain: 'khanacademy.org', aliases: ['Khanmigo'] },
+  { name: 'MagicSchool AI', domain: 'magicschool.ai' },
+  { name: 'Delphi', domain: 'delphi.ai' },
+  { name: 'Eight Sleep', domain: 'eightsleep.com' },
 ]
 
-/** Longest-name-first so the picker's ranking is stable across ties. */
-const SEARCHABLE = STARTUPS.map((startup) => ({
-  startup,
-  haystack: [startup.name, ...(startup.aliases ?? [])].map((s) => s.toLowerCase()),
-}))
+/** Strips punctuation and spaces so "11 labs", "11labs" and "11-labs" agree. */
+const normalize = (s: string) => s.toLowerCase().replace(/[.\s\-&]/g, '')
 
-const normalize = (s: string) => s.toLowerCase().replace(/[.\s-]/g, '')
+/** Splits on word boundaries, including the camelCase humps in "ElevenLabs". */
+function words(s: string): string[] {
+  return s
+    .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+    .split(/[\s\-.&/]+/)
+    .map(normalize)
+    .filter(Boolean)
+}
+
+interface Searchable {
+  startup: Startup
+  nameNorm: string
+  nameWords: string[]
+  aliasNorms: string[]
+  aliasWords: string[]
+}
+
+const SEARCHABLE: Searchable[] = STARTUPS.map((startup) => {
+  const aliases = startup.aliases ?? []
+  return {
+    startup,
+    nameNorm: normalize(startup.name),
+    nameWords: words(startup.name),
+    aliasNorms: aliases.map(normalize),
+    aliasWords: aliases.flatMap(words),
+  }
+})
+
+/** Lower is better. Kept as named constants because the ordering *is* the UX. */
+const RANK = {
+  namePrefix: 0,
+  nameWordPrefix: 1,
+  aliasPrefix: 2,
+  nameSubstring: 3,
+  aliasSubstring: 4,
+} as const
 
 /**
- * Autocomplete search.
+ * Autocomplete search, ranked the way people expect a search box to behave.
  *
- * Ranking is deliberately simple: name-prefix matches come first (typing "per"
- * should surface Perplexity before anything that merely contains "per"), then
- * alias-prefix, then substring anywhere. Punctuation and spaces are ignored so
- * "11labs", "elevenlabs" and "eleven labs" all land on ElevenLabs.
+ * Word-start matches beat mid-word ones. Typing "ra" should offer Ramp, Rabbit
+ * and Rain AI — not Auro*ra* or Anysc*a*le, which merely contain the letters.
+ * That distinction didn't matter at 150 names; past 350 it's the difference
+ * between a usable picker and a bag of noise. Mid-word substrings still match,
+ * but only to fill slots the better tiers left empty.
+ *
+ * Punctuation and spacing are ignored throughout, so "11labs", "eleven labs"
+ * and "ElevenLabs" all land on the same company.
  */
 export function searchStartups(query: string, limit = 8): Startup[] {
   const q = normalize(query)
   if (q.length === 0) return []
 
   const scored: Array<{ startup: Startup; rank: number }> = []
-  for (const { startup, haystack } of SEARCHABLE) {
-    const [name, ...aliases] = haystack
-    let rank = Infinity
 
-    if (normalize(name).startsWith(q)) rank = 0
-    else if (aliases.some((a) => normalize(a).startsWith(q))) rank = 1
-    else if (normalize(name).includes(q)) rank = 2
-    else if (aliases.some((a) => normalize(a).includes(q))) rank = 3
+  for (const entry of SEARCHABLE) {
+    let rank: number | null = null
 
-    if (rank !== Infinity) scored.push({ startup, rank })
+    if (entry.nameNorm.startsWith(q)) rank = RANK.namePrefix
+    else if (entry.nameWords.some((w) => w.startsWith(q))) rank = RANK.nameWordPrefix
+    else if (
+      entry.aliasNorms.some((a) => a.startsWith(q)) ||
+      entry.aliasWords.some((w) => w.startsWith(q))
+    ) {
+      rank = RANK.aliasPrefix
+    } else if (entry.nameNorm.includes(q)) rank = RANK.nameSubstring
+    else if (entry.aliasNorms.some((a) => a.includes(q))) rank = RANK.aliasSubstring
+
+    if (rank !== null) scored.push({ startup: entry.startup, rank })
   }
 
+  // Alphabetical within a tier: arbitrary, but stable, so the list doesn't
+  // reshuffle under the user's finger as they type.
   scored.sort((a, b) => a.rank - b.rank || a.startup.name.localeCompare(b.startup.name))
   return scored.slice(0, limit).map((s) => s.startup)
 }
