@@ -96,4 +96,5 @@ npm run build
 
 - Grow `startups.ts` from ~150 toward 500.
 - Write more spectrum cards — the format is two poles of a single arguable axis.
-- The AI-pilled visual theme. The current UI is deliberately plain.
+- More visual character. The current look is a plain warm-paper theme; every color is a CSS
+  variable in `src/index.css`, so re-theming is a one-file job.

@@ -1,27 +1,35 @@
 /*
- * WaveLang global styles. Deliberately plain for now — one dark theme, system
- * fonts, no framework. The AI-pilled visual treatment comes later; this exists
- * so the game is legible on a phone.
+ * WaveLang global styles. Light, warm, and boardgame-ish rather than
+ * dashboard-ish — paper background, ink text, no neon. System fonts, no
+ * framework.
+ *
+ * Every color the app uses is declared here; components reference the vars and
+ * never hardcode a hex, so re-theming stays a one-file job.
  */
 
 :root {
-  --bg: #0d1117;
-  --surface: #161b22;
-  --surface-2: #1f262e;
-  --border: #2d3540;
-  --text: #e6edf3;
-  --muted: #8b949e;
-  --accent: #5aa9ff;
-  --left: #f0883e;
-  --right: #56d4a0;
-  --danger: #f85149;
+  --bg: #faf6ef;
+  --surface: #ffffff;
+  --surface-2: #f3ede2;
+  --track: #ebe3d5;
+  --border: #e0d7c6;
+  --text: #2c2721;
+  --muted: #6b6255;
+  --accent: #1f6f6b;
+  --accent-ink: #ffffff;
+  --left: #b0512c;
+  --right: #2a6e54;
+  --danger: #a52f22;
 
-  --radius: 12px;
+  --shadow-sm: 0 1px 2px rgb(70 55 35 / 0.06);
+  --shadow-lg: 0 10px 28px rgb(70 55 35 / 0.16);
+
+  --radius: 14px;
   --gap: 12px;
   /* Every tappable thing is at least this tall. */
   --tap: 44px;
 
-  color-scheme: dark;
+  color-scheme: light;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   color: var(--text);
   background: var(--bg);
@@ -88,6 +96,7 @@ body {
 
 .card {
   background: var(--surface);
+  box-shadow: var(--shadow-sm);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 16px;
@@ -148,15 +157,20 @@ button:hover:not(:disabled) {
   border-color: var(--muted);
 }
 
+button.primary:hover:not(:disabled) {
+  filter: brightness(1.1);
+  border-color: var(--accent);
+}
+
 button:disabled {
-  opacity: 0.45;
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
 button.primary {
   background: var(--accent);
   border-color: var(--accent);
-  color: #04101f;
+  color: var(--accent-ink);
   font-weight: 650;
 }
 
@@ -182,8 +196,13 @@ select {
   padding: 0 14px;
   border-radius: var(--radius);
   border: 1px solid var(--border);
-  background: var(--surface-2);
+  background: var(--surface);
   color: var(--text);
+}
+
+input::placeholder {
+  color: var(--muted);
+  opacity: 0.75;
 }
 
 input:focus,

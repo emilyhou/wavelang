@@ -3,6 +3,7 @@
   flex: none;
   object-fit: contain;
   background: var(--surface-2);
+  padding: 1px;
 }
 
 .startup-logo.fallback {

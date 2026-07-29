@@ -53,10 +53,11 @@ function wedgeBands(target: number) {
     }))
 }
 
+/** Teal ramp, darkest at the bullseye so value reads as "closer is better". */
 const BAND_FILL: Record<number, string> = {
-  4: '#5aa9ff',
-  3: '#3d7fc4',
-  2: '#2b5885',
+  4: '#1f6f6b',
+  3: '#5b9c96',
+  2: '#a7c8c3',
 }
 
 export interface DialProps {

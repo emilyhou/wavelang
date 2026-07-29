@@ -23,14 +23,15 @@
 }
 
 .dial-track {
-  fill: var(--surface-2);
+  fill: var(--track);
   stroke: var(--border);
   stroke-width: 1;
 }
 
 .dial-tick {
-  stroke: var(--border);
+  stroke: var(--muted);
   stroke-width: 2;
+  opacity: 0.35;
 }
 
 .dial-needle {
@@ -44,7 +45,7 @@
   stroke: var(--muted);
   stroke-width: 3;
   stroke-dasharray: 6 5;
-  opacity: 0.75;
+  opacity: 0.85;
 }
 
 .dial-hub {

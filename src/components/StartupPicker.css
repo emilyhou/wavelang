@@ -18,7 +18,7 @@
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  box-shadow: 0 12px 32px rgb(0 0 0 / 0.45);
+  box-shadow: var(--shadow-lg);
 }
 
 .picker-list.drop-down {
@@ -65,7 +65,8 @@
   padding: 6px 6px 6px 12px;
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  background: var(--surface-2);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
 }
 
 .picker-chosen-name {
