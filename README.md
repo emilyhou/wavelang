@@ -41,6 +41,22 @@ same lobby.
 
 Without these, the app still runs — the online buttons are just disabled and say why.
 
+### Deploying
+
+Any static host works. The app uses hash routing (`#/room/ABCD`), so no rewrite rules are needed.
+On Vercel/Netlify/Cloudflare Pages the Vite defaults are correct: build `npm run build`, output `dist`.
+
+Set the same two variables in your host's environment settings. **Vite inlines them at build time**,
+so they must exist before the build runs, and changing them requires a redeploy — editing them alone
+does nothing.
+
+Don't paste `.env.example` into a hosting dashboard: those are placeholder strings, and a build made
+with them fails every request with `ERR_NAME_NOT_RESOLVED` against a domain that doesn't exist. The
+app detects that specific mistake and says so on the home screen rather than failing silently.
+
+GitHub Pages needs one extra step — it serves from a subpath, so set `base: '/wavelang/'` in
+`vite.config.ts` first.
+
 ## Game modes
 
 | Mode | Players | How it ends |

@@ -234,6 +234,7 @@ export function startGame(
   allCardIds: readonly string[],
   rng: Rng,
 ): RoomState {
+  if (state.phase !== 'lobby' && state.phase !== 'gameOver') return state
   const fresh: RoomState = {
     ...state,
     scores: { left: 0, right: 0 },
@@ -251,21 +252,40 @@ export function shuffleCard(
   allCardIds: readonly string[],
   rng: Rng,
 ): RoomState {
+  if (state.phase !== 'pickingCard') return state
   const { cardId, deck } = drawCard(state.deck, allCardIds, rng)
   return { ...state, cardId, deck }
 }
 
+/*
+ * Phase transitions below are all guarded on the phase they advance *from*.
+ *
+ * That guard is what makes them safe to re-apply. When two players act at the
+ * same instant, the write that loses the compare-and-set re-applies its
+ * function on top of the winner's state — without these guards, two people
+ * tapping "Next round" together would advance the game two rounds. Applying a
+ * transition from the wrong phase is now a no-op instead.
+ */
+
 /** Psychic has seen the card and is ready to look at the target. */
 export function acceptCard(state: RoomState): RoomState {
+  if (state.phase !== 'pickingCard') return state
   return { ...state, phase: 'givingClue' }
 }
 
 export function submitClue(state: RoomState, clue: string): RoomState {
+  if (state.phase !== 'givingClue') return state
   return { ...state, phase: 'guessing', clue }
 }
 
-/** Live dial movement while the team deliberates. */
+/**
+ * Live dial movement while the team deliberates.
+ *
+ * Safe to re-apply by construction: it sets an absolute position rather than a
+ * delta, so a replayed move lands in the same place.
+ */
 export function moveGuess(state: RoomState, guess: number): RoomState {
+  if (state.phase !== 'guessing') return state
   return { ...state, guess: clamp(guess, 0, 100) }
 }
 
@@ -274,16 +294,25 @@ export function moveGuess(state: RoomState, guess: number): RoomState {
  * left/right bet; coop goes straight to the reveal.
  */
 export function submitGuess(state: RoomState): RoomState {
+  if (state.phase !== 'guessing') return state
   if (state.mode === 'coop') return revealRound(state)
   return { ...state, phase: 'counterGuess' }
 }
 
 export function submitCounterGuess(state: RoomState, counterGuess: CounterGuess): RoomState {
+  if (state.phase !== 'counterGuess') return state
   return revealRound({ ...state, counterGuess })
 }
 
-/** Scores the round and moves to the reveal screen. */
+/**
+ * Scores the round and moves to the reveal screen.
+ *
+ * Scoring is additive, so unlike the other transitions this one would double a
+ * team's points if it ran twice — hence the guard against re-entering from
+ * `reveal`.
+ */
 export function revealRound(state: RoomState): RoomState {
+  if (state.phase === 'reveal' || state.phase === 'gameOver') return state
   const target = state.target ?? 50
   const guessPoints = scoreGuess(target, state.guess)
   const counterPoints = scoreCounterGuess(target, state.guess, state.counterGuess)
@@ -333,6 +362,9 @@ export function nextRound(
   allCardIds: readonly string[],
   rng: Rng,
 ): RoomState {
+  // Only the reveal advances. Without this, two players tapping "Next round"
+  // at the same moment would skip a round between them.
+  if (state.phase !== 'reveal') return state
   if (isGameOver(state)) {
     return { ...state, phase: 'gameOver' as Phase }
   }

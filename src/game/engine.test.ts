@@ -2,15 +2,19 @@ import { describe, expect, it } from 'vitest'
 import {
   TARGET_MAX,
   TARGET_MIN,
+  acceptCard,
   addPlayer,
   canStartGame,
   createRoom,
   isGameOver,
+  moveGuess,
   nextPsychic,
   nextRound,
   randomRoomCode,
   randomTarget,
   otherTeam,
+  revealRound,
+  shuffleCard,
   scoreCounterGuess,
   scoreGuess,
   setPlayerTeam,
@@ -297,6 +301,77 @@ describe('game end', () => {
   it('reports no winner on a tie', () => {
     const state = startGame(fourPlayerRoom(), CARDS, alwaysZero)
     expect(winner({ ...state, scores: { left: 10, right: 10 } })).toBeNull()
+  })
+})
+
+/**
+ * The multiplayer write path re-applies a mutation on top of fresh server state
+ * when it loses a compare-and-set race. That only works if applying a
+ * transition from the wrong phase does nothing — otherwise two players tapping
+ * the same button together advance the game twice. This was a real bug, caught
+ * by two browser tabs clicking "Next round" at the same instant.
+ */
+describe('phase transitions are safe to re-apply', () => {
+  function atReveal(): RoomState {
+    let state = startGame(fourPlayerRoom(), CARDS, alwaysZero)
+    state = { ...state, target: 50, phase: 'givingClue' }
+    state = submitClue(state, 'Ramp')
+    state = { ...state, guess: 50 }
+    state = submitGuess(state)
+    return submitCounterGuess(state, 'left')
+  }
+
+  it('does not skip a round when nextRound runs twice', () => {
+    const once = nextRound(atReveal(), CARDS, alwaysZero)
+    const twice = nextRound(once, CARDS, alwaysZero)
+
+    expect(once.roundNumber).toBe(2)
+    expect(twice.roundNumber).toBe(2)
+    expect(twice).toEqual(once)
+  })
+
+  it('does not double-score when revealRound runs twice', () => {
+    const revealed = atReveal()
+    const again = revealRound(revealed)
+
+    expect(revealed.scores.left).toBe(4)
+    expect(again.scores.left).toBe(4)
+    expect(again).toEqual(revealed)
+  })
+
+  it('ignores a stale counter-guess arriving after the reveal', () => {
+    const revealed = atReveal()
+    expect(submitCounterGuess(revealed, 'right')).toEqual(revealed)
+  })
+
+  it('ignores a stale clue or guess submitted from the wrong phase', () => {
+    const state = startGame(fourPlayerRoom(), CARDS, alwaysZero) // phase: pickingCard
+    expect(submitClue(state, 'Cursor')).toEqual(state)
+    expect(submitGuess(state)).toEqual(state)
+    expect(moveGuess(state, 80)).toEqual(state)
+  })
+
+  it('ignores a second acceptCard', () => {
+    const state = acceptCard(startGame(fourPlayerRoom(), CARDS, alwaysZero))
+    expect(state.phase).toBe('givingClue')
+    expect(acceptCard(state)).toEqual(state)
+  })
+
+  it('does not restart a game already in progress', () => {
+    const running = startGame(fourPlayerRoom(), CARDS, alwaysZero)
+    expect(startGame(running, CARDS, alwaysZero)).toEqual(running)
+  })
+
+  it('ignores a card shuffle once the psychic has moved on', () => {
+    const state = acceptCard(startGame(fourPlayerRoom(), CARDS, alwaysZero))
+    expect(shuffleCard(state, CARDS, alwaysZero)).toEqual(state)
+  })
+
+  it('still allows a rematch from the game-over screen', () => {
+    const finished = { ...startGame(fourPlayerRoom(), CARDS, alwaysZero), phase: 'gameOver' as const }
+    const rematch = startGame(finished, CARDS, alwaysZero)
+    expect(rematch.phase).toBe('pickingCard')
+    expect(rematch.scores).toEqual({ left: 0, right: 0 })
   })
 })
 

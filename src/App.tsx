@@ -7,7 +7,7 @@ import type { GameController } from './game/controller'
 import { useHotseatRoom } from './game/useHotseatRoom'
 import { RoomError, createRoomRow, joinRoomRow, useRoom } from './game/useRoom'
 import { getPlayerId, setPlayerName } from './lib/identity'
-import { SUPABASE_SETUP_HINT, isSupabaseConfigured } from './lib/supabase'
+import { SUPABASE_SETUP_HINT, isSupabaseConfigured, supabaseConfigProblem } from './lib/supabase'
 import type { GameMode, Player } from './game/types'
 import './App.css'
 
@@ -90,7 +90,7 @@ export default function App() {
     <main className="app">
       <Home
         initialCode={roomCode ?? undefined}
-        error={error ?? (isSupabaseConfigured ? null : SUPABASE_SETUP_HINT)}
+        error={error ?? supabaseConfigProblem ?? (isSupabaseConfigured ? null : SUPABASE_SETUP_HINT)}
         busy={busy}
         multiplayerEnabled={isSupabaseConfigured}
         onCreate={create}
@@ -101,8 +101,15 @@ export default function App() {
   )
 }
 
-const describe = (e: unknown) =>
-  e instanceof RoomError ? e.message : 'Something went wrong. Try again.'
+function describe(e: unknown): string {
+  if (e instanceof RoomError) return e.message
+  // A failed fetch here means the Supabase host is unreachable — almost always
+  // a wrong URL baked into the build rather than anything the player did.
+  if (e instanceof TypeError && /fetch/i.test(e.message)) {
+    return "Couldn't reach the server. Check the Supabase URL this build was deployed with."
+  }
+  return 'Something went wrong. Try again.'
+}
 
 function OnlineGame({
   code,
