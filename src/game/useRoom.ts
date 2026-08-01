@@ -35,6 +35,25 @@ export async function createRoomRow(host: Player, mode: GameMode): Promise<strin
   throw new RoomError('Could not find a free room code. Try again.')
 }
 
+/**
+ * Does this room exist?
+ *
+ * Called before rendering an invite link's landing screen, so a stale or
+ * mistyped link can fall back to the normal home screen instead of offering to
+ * join something that isn't there. Any error counts as "no" — this is a routing
+ * decision, and the home screen is the safe destination.
+ */
+export async function roomExists(code: string): Promise<boolean> {
+  if (!supabase) return false
+  const { data, error } = await supabase
+    .from(TABLE)
+    .select('code')
+    .eq('code', code)
+    .maybeSingle<{ code: string }>()
+
+  return !error && data !== null
+}
+
 /** Adds a player to an existing room, or explains why it couldn't. */
 export async function joinRoomRow(code: string, player: Player): Promise<void> {
   const sb = requireClient()

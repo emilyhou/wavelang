@@ -10,8 +10,6 @@ export interface HomeProps {
   /** Set when a join attempt bounced (bad code, room gone). */
   error?: string | null
   busy?: boolean
-  /** Prefilled when someone opened an invite link. */
-  initialCode?: string
   /** False when the build has no Supabase config; online buttons go dead. */
   multiplayerEnabled?: boolean
 }
@@ -22,12 +20,11 @@ export function Home({
   onHotseat,
   error,
   busy,
-  initialCode,
   multiplayerEnabled = true,
 }: HomeProps) {
   const [name, setName] = useState(getPlayerName)
   const [mode, setMode] = useState<GameMode>('teams')
-  const [code, setCode] = useState(initialCode ?? '')
+  const [code, setCode] = useState('')
 
   const trimmedName = name.trim()
   const trimmedCode = code.trim().toUpperCase()
@@ -43,9 +40,7 @@ export function Home({
     <div className="stack home">
       <header className="stack center">
         <h1>WaveLang</h1>
-        <p className="muted">
-          Wavelength, except every clue has to be an AI startup. Read the room, name the company.
-        </p>
+        <p className="muted">AI startup Wavelength</p>
       </header>
 
       {error && <p className="error center">{error}</p>}
@@ -118,9 +113,6 @@ export function Home({
       >
         Play on one device
       </button>
-      <p className="muted center">
-        One phone passed around the table — no room code, no internet needed.
-      </p>
     </div>
   )
 }

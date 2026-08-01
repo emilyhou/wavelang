@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useState } from 'react'
 import { GameOver } from './screens/GameOver'
 import { Home } from './screens/Home'
+import { JoinInvite } from './screens/JoinInvite'
 import { Lobby } from './screens/Lobby'
 import { Round } from './screens/Round'
 import type { GameController } from './game/controller'
 import { useHotseatRoom } from './game/useHotseatRoom'
-import { RoomError, createRoomRow, joinRoomRow, useRoom } from './game/useRoom'
+import { RoomError, createRoomRow, joinRoomRow, roomExists, useRoom } from './game/useRoom'
 import { getPlayerId, setPlayerName } from './lib/identity'
 import { SUPABASE_SETUP_HINT, isSupabaseConfigured, supabaseConfigProblem } from './lib/supabase'
 import type { GameMode, Player } from './game/types'
@@ -27,6 +28,9 @@ function useHashRoute(): string {
   return hash
 }
 
+/** null when there's no invite to check. */
+type InviteCheck = 'checking' | 'valid' | 'missing' | null
+
 const parseRoomCode = (hash: string): string | null => {
   const match = /^#\/room\/([A-Z]{4})$/i.exec(hash)
   return match ? match[1].toUpperCase() : null
@@ -40,11 +44,55 @@ export default function App() {
   const [self, setSelf] = useState<Player | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
+  const [invite, setInvite] = useState<InviteCheck>(null)
 
   const asPlayer = useCallback((name: string): Player => {
     setPlayerName(name)
     return { id: getPlayerId(), name, team: 'left' }
   }, [])
+
+  const goHome = useCallback(() => {
+    setError(null)
+    location.hash = ''
+  }, [])
+
+  /**
+   * Verify an invite link's room before showing anything about it.
+   *
+   * A dead or mistyped code drops straight to the home screen rather than
+   * offering to join a room that doesn't exist. Clearing the hash is what
+   * actually routes there — this effect re-runs with no code and stands down.
+   */
+  useEffect(() => {
+    if (!roomCode || self) {
+      setInvite(null)
+      return
+    }
+
+    if (!isSupabaseConfigured) {
+      goHome()
+      return
+    }
+
+    let cancelled = false
+    setInvite('checking')
+
+    roomExists(roomCode)
+      .then((exists) => {
+        if (cancelled) return
+        setInvite(exists ? 'valid' : 'missing')
+        if (!exists) goHome()
+      })
+      .catch(() => {
+        if (cancelled) return
+        setInvite('missing')
+        goHome()
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [roomCode, self, goHome])
 
   const create = async (name: string, mode: GameMode) => {
     setBusy(true)
@@ -80,16 +128,36 @@ export default function App() {
     return <HotseatGame name={hotseat.name} mode={hotseat.mode} onExit={() => setHotseat(null)} />
   }
 
-  // An invite link lands here with a code but no identity yet, so the home
-  // screen shows with the code prefilled until they've entered a name.
   if (roomCode && self) {
     return <OnlineGame code={roomCode} self={self} onLeft={() => setSelf(null)} />
+  }
+
+  // Invite link, room confirmed: ask for a name and nothing else.
+  if (roomCode && invite === 'valid') {
+    return (
+      <main className="app">
+        <JoinInvite
+          code={roomCode}
+          error={error}
+          busy={busy}
+          onJoin={(name) => join(name, roomCode)}
+          onCancel={goHome}
+        />
+      </main>
+    )
+  }
+
+  if (roomCode && invite === 'checking') {
+    return (
+      <main className="app">
+        <p className="muted center">Looking for room {roomCode}…</p>
+      </main>
+    )
   }
 
   return (
     <main className="app">
       <Home
-        initialCode={roomCode ?? undefined}
         error={error ?? supabaseConfigProblem ?? (isSupabaseConfigured ? null : SUPABASE_SETUP_HINT)}
         busy={busy}
         multiplayerEnabled={isSupabaseConfigured}

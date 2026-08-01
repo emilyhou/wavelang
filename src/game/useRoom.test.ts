@@ -89,7 +89,7 @@ vi.mock('../lib/supabase', () => ({
   SUPABASE_SETUP_HINT: '',
 }))
 
-const { createRoomRow, joinRoomRow } = await import('./useRoom')
+const { createRoomRow, joinRoomRow, roomExists } = await import('./useRoom')
 
 const player = (id: string, name: string): Player => ({ id, name, team: 'left' })
 
@@ -144,6 +144,40 @@ describe('createRoomRow', () => {
     db.from = broken.from as typeof db.from
     try {
       await expect(createRoomRow(player('a', 'Ana'), 'teams')).rejects.toThrow('permission denied')
+    } finally {
+      db.from = original
+    }
+  })
+})
+
+describe('roomExists', () => {
+  /*
+   * This gates which screen an invite link lands on, so a wrong answer either
+   * offers to join a room that isn't there or dumps someone with a good link
+   * back to the home screen.
+   */
+  it('is true for a room that exists', async () => {
+    const code = await createRoomRow(player('a', 'Ana'), 'teams')
+    await expect(roomExists(code)).resolves.toBe(true)
+  })
+
+  it('is false for a code nobody has used', async () => {
+    await expect(roomExists('ZZZZ')).resolves.toBe(false)
+  })
+
+  it('is false rather than throwing when the query errors', async () => {
+    const original = db.from
+    db.from = (() => ({
+      select: () => ({
+        eq: () => ({
+          maybeSingle: () =>
+            Promise.resolve({ data: null, error: { code: '42501', message: 'denied' } }),
+        }),
+      }),
+    })) as unknown as typeof db.from
+
+    try {
+      await expect(roomExists('ABCD')).resolves.toBe(false)
     } finally {
       db.from = original
     }
